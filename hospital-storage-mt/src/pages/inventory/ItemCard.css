@@ -1,0 +1,83 @@
+.card {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    margin:10px;
+    margin-bottom:30px;
+  }
+  
+  .card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .card__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom:10px;
+  }
+  
+  .card__type {
+    margin: 0;
+  }
+  
+  .card__property {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+  }
+  
+  .card__property-name {
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  
+  .card__property-value {
+    margin: 0;
+  }
+  
+  .card__footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
+  
+  .card__button-u {
+    margin-left: 8px;
+    padding: 8px 16px;
+    background-color: #0077cc;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .card__button-d {
+    margin-left: 8px;
+    padding: 8px 16px;
+    background-color: red;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .card__button-u:hover {
+    background-color: #005ea2;
+  }
+
+  .card__button-d:hover {
+    background-color: #e0583d;
+  }
+  
+  
