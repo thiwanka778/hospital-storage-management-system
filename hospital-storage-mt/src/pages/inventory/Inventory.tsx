@@ -17,6 +17,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import ItemForm from './ItemForm';
 import ItemCard from './ItemCard';
+import { updateDialogClose } from '../../features/itemSlice/itemSlice';
+import Autocomplete from '@mui/material/Autocomplete';
+import InputAdornment from '@mui/material/InputAdornment';
+
 
 
 
@@ -34,6 +38,38 @@ const Inventory = () => {
 const [itemType,setItemType]=React.useState<string>("");
 const [itemTypeUpdated,setItemTypeUpdated]=React.useState<string>("");
 const errorMessage=useSelector((state:any)=>state.item.errorMessage);
+const openu=useSelector((state:any)=>state.item.openu);
+const itemId=useSelector((state:any)=>state.item.itemId);
+const [valuet, setValuet] = React.useState<string | null>(null);
+const [itemInformation, setItemInformation] = React.useState({
+  itemName: '',
+  description: '',
+  quantity: '',
+  supplierInformation: '',
+  storageLocation: '',
+  expirationDate: '',
+  price:"",
+});
+
+const typeArrayNames=typeArray.map((item:any)=>{
+     return item.itemTypeName
+})
+
+const handleChangeUpdateBox = (e:any) => {
+  const { name, value } = e.target;
+  setItemInformation((prevState:any) => ({
+    ...prevState,
+    [name]: value,
+  }));
+};
+
+const formatDate = (date:any) => {
+  const formattedDate = new Date(date);
+  const day = formattedDate.getDate().toString().padStart(2, '0');
+  const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0');
+  const year = formattedDate.getFullYear();
+  return `${day}/${month}/${year}`;
+};
 
 
 React.useEffect(()=>{
@@ -117,7 +153,11 @@ const itemDisplay=itemArray.map((item:any)=>{
      )
 })
 
+const handleClose = () => {
+      dispatch(updateDialogClose());
+};
 
+console.log(itemInformation,valuet)
   return (
     <>
     <div className='in'>
@@ -168,6 +208,77 @@ const itemDisplay=itemArray.map((item:any)=>{
             {itemDisplay}
             </div>
             
+          </div>
+
+          <div>
+          <Dialog
+        open={openu}
+        onClose={handleClose}
+      
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Update Item"}
+        </DialogTitle>
+        <DialogContent>
+        <div className="update-dialog">
+        <input type="text" placeholder="Item Name" name="itemName" 
+        value={itemInformation.itemName}
+         onChange={handleChangeUpdateBox} className="input-box"/>
+
+        <Autocomplete
+  disablePortal
+  id="combo-box-demo"
+  options={typeArrayNames}
+  onChange={(event: any, newValue: string | null) => {
+    setValuet(newValue);
+  }}
+  value={valuet}
+  sx={{ width: "100%",marginBottom:"10px" }}
+  renderInput={(params) => <TextField {...params} label="Type of the Item" />}
+/>
+        <input type="number" name="quantity"  value={itemInformation.quantity}
+          onChange={handleChangeUpdateBox} placeholder="Quantity" className="input-box"/>
+
+  <input type="text" name="supplierInformation"  value={itemInformation.supplierInformation}
+   onChange={handleChangeUpdateBox} placeholder="Supplier Information" className="input-box"/>
+
+  <input type="number" name="price"  value={itemInformation.price}
+   onChange={handleChangeUpdateBox} 
+   placeholder="Price" className="input-box"/>
+
+  <input type="text" name="description"  value={itemInformation.description}
+   onChange={handleChangeUpdateBox} placeholder="Description" className="input-box"/>
+
+  <input type="text" name="storageLocation"  value={itemInformation.storageLocation}
+  onChange={handleChangeUpdateBox} placeholder="Storage Location" className="input-box"/>
+
+  <TextField
+       sx={{marginTop:"15px"}}
+        id="expirationDate"
+        name="expirationDate"
+        label="Expiration Date"
+        onChange={handleChangeUpdateBox}
+        type="date"
+        InputLabelProps={{ shrink: true }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              {itemInformation.expirationDate
+                ? formatDate(itemInformation.expirationDate)
+                : 'dd/mm/yyyy'}
+            </InputAdornment>
+          ),
+        }}
+      />
+        </div>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" size="small" color="success" >save changes</Button>
+          <Button variant="contained" size="small" color="error" onClick={handleClose}>
+            cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
           </div>
           </>
         </TabPanel>

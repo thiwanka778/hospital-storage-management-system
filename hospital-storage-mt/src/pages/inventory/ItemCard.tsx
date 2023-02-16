@@ -1,6 +1,7 @@
 import React from 'react';
 import './ItemCard.css';
 import {useSelector,useDispatch} from "react-redux";
+import {getItemId} from "../../features/itemSlice/itemSlice";
 
 
 interface itemProps{
@@ -15,6 +16,11 @@ const ItemCard = (props:itemProps) => {
            itemType=typeArray[i].itemTypeName;
            break;
         }
+    };
+
+    const editClick=()=>{
+      dispatch(getItemId({required:props.item._id}))
+      
     }
   return (
     <div className="card">
@@ -53,7 +59,7 @@ const ItemCard = (props:itemProps) => {
 
       </div>
       <div className="card__footer">
-        <button className="card__button-u">Edit</button>
+        <button className="card__button-u" onClick={editClick}>Edit</button>
         <button className="card__button-d">Delete</button>
       </div>
     </div>

@@ -9,6 +9,8 @@ const initialState={
    errorMessage:"",
    itemChange:1,
    itemArray:litemArray?JSON.parse(litemArray):[],
+   openu:false,
+   itemId:"",
 
  }
 
@@ -44,7 +46,13 @@ const initialState={
     name:"item",
     initialState,
     reducers:{
-
+           updateDialogClose:(state:any)=>{
+            state.openu=false;
+           },
+           getItemId:(state:any,action:any)=>{
+                state.openu=true;
+                state.itemId=action.payload.required
+           },
     },
     extraReducers:(builder:any)=>{
         builder
@@ -83,5 +91,5 @@ const initialState={
     }
     
  })
-
+export const {updateDialogClose,getItemId}=itemSlice.actions;
  export default itemSlice.reducer;

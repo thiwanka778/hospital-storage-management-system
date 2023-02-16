@@ -29,3 +29,20 @@
     font-family: 'Ubuntu', sans-serif;
     font-weight:bold;
 }
+.update-dialog{
+    display:flex;
+    flex-direction: column;
+}
+.input-box {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+  .input-box:focus {
+    outline: none;
+    border-color: #0066ff;
+  }
