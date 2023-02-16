@@ -53,6 +53,9 @@ const initialState={
                 state.openu=true;
                 state.itemId=action.payload.required
            },
+           changing:(state:any)=>{
+            state.itemChange=state.itemChange+1;
+           }
     },
     extraReducers:(builder:any)=>{
         builder
@@ -91,5 +94,5 @@ const initialState={
     }
     
  })
-export const {updateDialogClose,getItemId}=itemSlice.actions;
+export const {updateDialogClose,getItemId,changing}=itemSlice.actions;
  export default itemSlice.reducer;

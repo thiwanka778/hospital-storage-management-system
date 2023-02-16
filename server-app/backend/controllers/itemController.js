@@ -47,6 +47,45 @@ const getItems=asyncHandler(async(req,res)=>{
         
  });
 
+ // desc  get types
+// route  PUT   /api/items/update
+
+const updateItems=asyncHandler(async(req,res)=>{
+    const {id,itemName,itemType,quantity,price,storageLocation,supplierInformation,expirationDate,description}=req.body;
+
+    if(!id || !itemName || !itemType || !quantity || !price || !supplierInformation){
+        return res.status(400).json({message:"Item Name, Item Type, Price, Quantity and Supplier Information are required"})
+    }
+    const item=await Item.findById(id).exec()
+
+    if(!item){
+        return res.status(400).json({message:"Item not Found"})
+    }
+
+    const duplicate=await Item.findOne({itemName})
+    if(duplicate && duplicate?._id.toString()!==id){
+        return res.status(409).json({message:"Duplicate Item Name"})
+    }
+
+    item.itemName=itemName
+    item.itemType=itemType
+    item.quantity=quantity
+    item.price=price
+    item.supplierInformation=supplierInformation
+    item.expirationDate=expirationDate
+    item.description=description
+    item.storageLocation=storageLocation
+
+    const updatedItem=await item.save()
+
+    res.json({
+        message:"Updated successfully"
+    })
+
+        
+ });
+
+
 
 
 
@@ -56,5 +95,6 @@ const getItems=asyncHandler(async(req,res)=>{
 module.exports={
    createItems,
    getItems,
+   updateItems,
 }
 

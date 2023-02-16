@@ -1,13 +1,14 @@
 import React from 'react';
 import './ItemCard.css';
 import {useSelector,useDispatch} from "react-redux";
-import {getItemId} from "../../features/itemSlice/itemSlice";
+import {changing, getItemId} from "../../features/itemSlice/itemSlice";
 
 
 interface itemProps{
     item:any,
 }
 const ItemCard = (props:itemProps) => {
+
     const dispatch=useDispatch();
     let itemType:string="";
     const typeArray=useSelector((state:any)=>state.type.typeArray);
@@ -18,9 +19,14 @@ const ItemCard = (props:itemProps) => {
         }
     };
 
+    let edate:string="";
+    if(props.item.expirationDate!==null){
+       edate=props.item.expirationDate.slice(0,10)
+    }
+
     const editClick=()=>{
       dispatch(getItemId({required:props.item._id}))
-      
+      dispatch(changing())
     }
   return (
     <div className="card">
@@ -54,7 +60,7 @@ const ItemCard = (props:itemProps) => {
 
        {props.item.expirationData!==null &&  <div className="card__property">
           <span className="card__property-name">Expiration Date:</span>
-          <span className="card__property-value">{props.item.expirationDate}</span>
+          <span className="card__property-value">{edate}</span>
         </div>}
 
       </div>

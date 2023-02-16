@@ -17,9 +17,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import ItemForm from './ItemForm';
 import ItemCard from './ItemCard';
-import { updateDialogClose } from '../../features/itemSlice/itemSlice';
+import { updateDialogClose,changing } from '../../features/itemSlice/itemSlice';
 import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
+
 
 
 
@@ -31,6 +32,7 @@ const Inventory = () => {
   const opentu=useSelector((state:any)=>state.type.opentu);
   const typeId=useSelector((state:any)=>state.type.typeId);
   const isChange=useSelector((state:any)=>state.type.isChange);
+  const itemChange=useSelector((state:any)=>state.item.itemChange);
   const typeArray=useSelector((state:any)=>state.type.typeArray);
   const itemArray=useSelector((state:any)=>state.item.itemArray);
   const loading=useSelector((state:any)=>state.type.loading);
@@ -41,7 +43,7 @@ const errorMessage=useSelector((state:any)=>state.item.errorMessage);
 const openu=useSelector((state:any)=>state.item.openu);
 const itemId=useSelector((state:any)=>state.item.itemId);
 const [valuet, setValuet] = React.useState<string | null>(null);
-const [itemInformation, setItemInformation] = React.useState({
+const [itemInformation, setItemInformation] = React.useState<any>({
   itemName: '',
   description: '',
   quantity: '',
@@ -146,18 +148,51 @@ const itemTypeDisplay=typeArray.map((item:any)=>{
   )
 });
 
-
 const itemDisplay=itemArray.map((item:any)=>{
      return (
       <ItemCard key={item._id} item={item}/>
      )
-})
-
+});
 const handleClose = () => {
       dispatch(updateDialogClose());
 };
 
 console.log(itemInformation,valuet)
+React.useEffect(()=>{
+  let typeId:string="";
+  if(itemId!==""){
+    setItemInformation((prevState:any)=>{
+      for(let i=0;i<itemArray.length;i++){
+        if(itemId===itemArray[i]._id){
+          typeId=itemArray[i].itemType;
+           return {
+               itemName:itemArray[i].itemName,
+               price:itemArray[i].price,
+               quantity:itemArray[i].quantity,
+               description:itemArray[i].description,
+               supplierInformation:itemArray[i].supplierInformation,
+               storageLocation:itemArray[i].storageLocation,
+               expirationDate:itemArray[i].expirationDate,
+              
+
+           }
+        }
+   }
+    })
+
+    setValuet((prevState:string|null)=>{
+      
+         for(let i=0;i<typeArray.length;i++){
+            if(typeId===typeArray[i]._id){
+                 return typeArray[i].itemTypeName;
+            }
+         }
+    })
+     
+  }
+},[itemChange])
+
+
   return (
     <>
     <div className='in'>
@@ -234,7 +269,7 @@ console.log(itemInformation,valuet)
   }}
   value={valuet}
   sx={{ width: "100%",marginBottom:"10px" }}
-  renderInput={(params) => <TextField {...params} label="Type of the Item" />}
+  renderInput={(params) => <TextField sx={{marginTop:"10px" }} {...params} label="Type of the Item" />}
 />
         <input type="number" name="quantity"  value={itemInformation.quantity}
           onChange={handleChangeUpdateBox} placeholder="Quantity" className="input-box"/>

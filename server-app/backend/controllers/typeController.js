@@ -55,7 +55,7 @@ const updateTypes=asyncHandler(async(req,res)=>{
 
     const duplicate=await ItemType.findOne({itemTypeName})
     if(duplicate && duplicate?._id.toString()!==id){
-        return res.status(409).json({message:"Duplicate item name"})
+        return res.status(409).json({message:"Duplicate item type name"})
     }
 
     itemtypes.itemTypeName=itemTypeName;
