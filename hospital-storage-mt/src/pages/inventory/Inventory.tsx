@@ -17,9 +17,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import ItemForm from './ItemForm';
 import ItemCard from './ItemCard';
-import { updateDialogClose,changing } from '../../features/itemSlice/itemSlice';
+import { updateDialogClose,changing, deleteItems } from '../../features/itemSlice/itemSlice';
 import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
+import { getItem ,updateItem, deleteBoxClose} from '../../features/itemSlice/itemSlice';
 
 
 
@@ -35,7 +36,8 @@ const Inventory = () => {
   const itemChange=useSelector((state:any)=>state.item.itemChange);
   const typeArray=useSelector((state:any)=>state.type.typeArray);
   const itemArray=useSelector((state:any)=>state.item.itemArray);
-  const loading=useSelector((state:any)=>state.type.loading);
+  const opend=useSelector((state:any)=>state.item.opend);
+  const loading:any=useSelector((state:any)=>state.type.loading);
   const [value, setValue] = React.useState('1');
 const [itemType,setItemType]=React.useState<string>("");
 const [itemTypeUpdated,setItemTypeUpdated]=React.useState<string>("");
@@ -43,6 +45,8 @@ const errorMessage=useSelector((state:any)=>state.item.errorMessage);
 const openu=useSelector((state:any)=>state.item.openu);
 const itemId=useSelector((state:any)=>state.item.itemId);
 const [valuet, setValuet] = React.useState<string | null>(null);
+const updateLoading=useSelector((state:any)=>state.item.updateLoading);
+const [valuetype, setValuetype] = React.useState<string | null>(null);
 const [itemInformation, setItemInformation] = React.useState<any>({
   itemName: '',
   description: '',
@@ -52,6 +56,11 @@ const [itemInformation, setItemInformation] = React.useState<any>({
   expirationDate: '',
   price:"",
 });
+
+
+React.useEffect(()=>{
+  dispatch(getItem())
+},[itemChange,dispatch]);
 
 const typeArrayNames=typeArray.map((item:any)=>{
      return item.itemTypeName
@@ -148,16 +157,65 @@ const itemTypeDisplay=typeArray.map((item:any)=>{
   )
 });
 
+
 const itemDisplay=itemArray.map((item:any)=>{
-     return (
+
+  if(valuetype===null){
+    return (
       <ItemCard key={item._id} item={item}/>
      )
+  }else{
+    for(let i=0;i<typeArray.length;i++){
+        if(valuetype===typeArray[i].itemTypeName){
+            if(item.itemType===typeArray[i]._id){
+              return (
+                <ItemCard key={item._id} item={item}/>
+               )
+            }
+        }
+         
+        
+    }
+  }
+    
 });
+
+
 const handleClose = () => {
       dispatch(updateDialogClose());
 };
 
-console.log(itemInformation,valuet)
+
+console.log(itemDisplay)
+
+const saveClick=()=>{
+  let typeIdNew:string="";
+  if(itemId){
+    for(let i=0;i<typeArray.length;i++){
+       if(valuet===typeArray[i].itemTypeName){
+            typeIdNew=typeArray[i]._id;
+            break;
+       }
+    }
+  }
+  if(itemId!==""){
+    dispatch(updateItem({
+      id:itemId,
+      itemName:itemInformation.itemName,
+      itemType:typeIdNew,
+      quantity:itemInformation.quantity,
+      price:itemInformation.price,
+      description:itemInformation.description,
+      supplierInformation:itemInformation.supplierInformation,
+      storageLocation:itemInformation.storageLocation,
+      expirationDate:itemInformation.expirationDate,
+  
+     })) 
+  }
+  
+   
+};
+
 React.useEffect(()=>{
   let typeId:string="";
   if(itemId!==""){
@@ -192,6 +250,13 @@ React.useEffect(()=>{
   }
 },[itemChange])
 
+const handleCloseDeletedDialog = () => {
+   dispatch(deleteBoxClose())
+};
+
+const deleteClickItem=()=>{
+   dispatch(deleteItems(itemId))
+}
 
   return (
     <>
@@ -237,9 +302,22 @@ React.useEffect(()=>{
         <TabPanel value="3">
           <>
           <div>
+           
+           <div>
+           <Autocomplete
+  disablePortal
+  id="combo-box-demo"
+  value={valuetype}
+  onChange={(event: any, newValue: string | null) => {
+    setValuetype(newValue);
+  }}
+  options={typeArrayNames}
+  sx={{ width: 300 }}
+  renderInput={(params) => <  TextField {...params} label="Choose Item Type" sx={{marginBottom:"20px",marginLeft:"50px"}} />}
+/>
+           </div>
 
-
-            <div>
+          <div>
             {itemDisplay}
             </div>
             
@@ -249,13 +327,14 @@ React.useEffect(()=>{
           <Dialog
         open={openu}
         onClose={handleClose}
-      
+       PaperProps={{sx:{width:"60vw"}}}
       >
         <DialogTitle id="alert-dialog-title">
           {"Update Item"}
         </DialogTitle>
         <DialogContent>
         <div className="update-dialog">
+          <p className='error-message'>{errorMessage}</p>
         <input type="text" placeholder="Item Name" name="itemName" 
         value={itemInformation.itemName}
          onChange={handleChangeUpdateBox} className="input-box"/>
@@ -308,7 +387,8 @@ React.useEffect(()=>{
         </div>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" size="small" color="success" >save changes</Button>
+          {updateLoading===false && <Button variant="contained" size="small" color="success" onClick={saveClick}>save changes</Button>}
+         {updateLoading===true &&  <Button variant="contained" size="small" color="success" disabled>save changes</Button>}
           <Button variant="contained" size="small" color="error" onClick={handleClose}>
             cancel
           </Button>
@@ -347,6 +427,30 @@ React.useEffect(()=>{
           color="error"
           onClick={handleCloseTypeDialog }>
             cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+      </div>
+
+
+
+      <div>
+      <Dialog
+        open={opend}
+        onClose={handleCloseDeletedDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Are you sure that you want to delete ?"}
+        </DialogTitle>
+       
+        <DialogActions>
+          <Button variant="contained" 
+          color="error" size="small" onClick={deleteClickItem} >delete</Button>
+          <Button variant="contained" 
+          color="primary" size="small" onClick={handleCloseDeletedDialog}>
+            No
           </Button>
         </DialogActions>
       </Dialog>

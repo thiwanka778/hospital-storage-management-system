@@ -86,6 +86,26 @@ const updateItems=asyncHandler(async(req,res)=>{
  });
 
 
+  // desc  delete types
+// route  DELETE   /api/items/delete
+
+const deleteItems=asyncHandler(async(req,res)=>{
+    const {id}=req.body
+    if(!id){
+     return res.status(400).json({message:"Item ID required"})
+    }
+ 
+    const item= await Item.findById(id).exec()
+    if(!item){
+     return res.status(400).json({message:"item not found"})
+    }
+ 
+    const result = await item.deleteOne()   
+    res.status(200).json({message:"Item deleted"})  
+      
+  })
+
+
 
 
 
@@ -96,5 +116,6 @@ module.exports={
    createItems,
    getItems,
    updateItems,
+   deleteItems,
 }
 

@@ -11,6 +11,9 @@ const initialState={
    itemArray:litemArray?JSON.parse(litemArray):[],
    openu:false,
    itemId:"",
+   updateLoading:false,
+   opend:false,
+
 
  }
 
@@ -42,6 +45,37 @@ const initialState={
     }
   );
 
+  export const updateItem:any = createAsyncThunk(
+    'item/update',
+    async (option:any,thunkAPI) => {
+      try{
+        const response = await axios.put("http://localhost:8000/api/items/update",option);
+        return response.data;
+      }catch(error:any){
+        const errorMessage=(error.response && error.response.data && 
+          error.response.data.message)|| error.message || error.toString()
+          return thunkAPI.rejectWithValue(errorMessage);
+      }
+      
+    }
+  );
+
+  export const deleteItems:any = createAsyncThunk(
+    'item/delete',
+    async (id,thunkAPI) => {
+      try{
+       
+       const resp:any= await axios.delete("http://localhost:8000/api/items/delete",{
+        data:{id},
+       });
+        return resp.data;
+      }catch(error:any){
+          
+      }
+      
+    }
+  );
+
  const itemSlice:any=createSlice({
     name:"item",
     initialState,
@@ -55,7 +89,15 @@ const initialState={
            },
            changing:(state:any)=>{
             state.itemChange=state.itemChange+1;
+           },
+           getDeletedItemId:(state:any,action:any)=>{
+            state.itemId=action.payload.required;
+            state.opend=true;
+           },
+           deleteBoxClose:(state:any)=>{
+            state.opend=false;
            }
+
     },
     extraReducers:(builder:any)=>{
         builder
@@ -79,6 +121,7 @@ const initialState={
           .addCase(getItem.pending, (state:any) => {
             state.loading = true;
             state.errorMessage="";
+           
           })
           .addCase(getItem.fulfilled, (state:any, action:any) => {
               state.loading = false;
@@ -91,8 +134,43 @@ const initialState={
               state.loading = false;
               
           })
+
+
+
+          .addCase(updateItem.pending, (state:any) => {
+            
+            state.errorMessage="";
+            state.updateLoading=true;
+          })
+          .addCase(updateItem.fulfilled, (state:any, action:any) => {
+              state.errorMessage="";
+              state.itemChange=state.itemChange+1;
+              state.updateLoading=false;
+              state.openu=false;
+              
+          })
+          .addCase(updateItem.rejected, (state:any, action:any) => {
+              state.loading = false;
+              state.updateLoading=false;
+              state.errorMessage=action.payload;
+              
+          })
+
+
+          .addCase(deleteItems.pending, (state:any) => {
+           
+            
+          })
+          .addCase(deleteItems.fulfilled, (state:any, action:any) => {
+              state.itemChange=state.itemChange+1;
+              state.opend=false;
+              
+          })
+          .addCase(deleteItems.rejected, (state:any, action:any) => {
+              
+          })
     }
     
  })
-export const {updateDialogClose,getItemId,changing}=itemSlice.actions;
+export const {updateDialogClose,getItemId,changing,getDeletedItemId, deleteBoxClose}=itemSlice.actions;
  export default itemSlice.reducer;

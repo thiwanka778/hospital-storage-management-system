@@ -34,7 +34,7 @@ const ItemForm = () => {
     }
   },[value])
 
-  const [itemInformation, setItemInformation] = useState({
+  const [itemInformation, setItemInformation] = useState<any>({
     itemName: '',
     description: '',
     quantity: '',

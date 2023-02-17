@@ -46,3 +46,17 @@
     outline: none;
     border-color: #0066ff;
   }
+  .error-message{
+    margin-bottom:10px;
+    color:red;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight:bold;
+  }
+
+  .no-item{
+    margin-bottom:50px;
+    font-size:25px;
+    color:gray;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight:bold;
+  }

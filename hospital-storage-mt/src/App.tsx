@@ -17,6 +17,7 @@ function App() {
 const dispatch=useDispatch();
 const isChange=useSelector((state:any)=>state.type.isChange)
 const itemChange=useSelector((state:any)=>state.item.itemChange)
+
   React.useEffect(()=>{
     dispatch(getType())
 },[dispatch,isChange]);

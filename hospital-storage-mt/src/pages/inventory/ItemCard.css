@@ -79,5 +79,25 @@
   .card__button-d:hover {
     background-color: #e0583d;
   }
+
+  .expire{
+    
+    font-weight:bold;
+    margin-bottom:10px;
+  }
+
+  .card__property-namet {
+    font-weight: bold;
+    margin-bottom: 4px;
+    color:blue;
+    font-size:18px;
+  }
+  
+  .card__property-valuet {
+    margin: 0;
+    color:purple;
+    font-size:18px;
+  }
+  
   
   
