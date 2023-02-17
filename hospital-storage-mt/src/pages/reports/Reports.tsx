@@ -61,7 +61,7 @@ let newArray:any[]=[];
         }
       }
   }
-console.log(newArray)
+
   return (
     <div className='report'>
  <Paper sx={{ width: '100%',marginTop:"10px", overflow: 'hidden' }}>

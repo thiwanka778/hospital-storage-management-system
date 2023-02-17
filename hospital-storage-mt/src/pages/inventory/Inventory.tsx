@@ -62,7 +62,7 @@ React.useEffect(()=>{
   dispatch(getItem())
 },[itemChange,dispatch]);
 
-const typeArrayNames=typeArray.map((item:any)=>{
+const typeArrayNames:string[]=typeArray.map((item:any)=>{
      return item.itemTypeName
 })
 
@@ -150,7 +150,7 @@ React.useEffect(()=>{
 
 
 
-const itemTypeDisplay=typeArray.map((item:any)=>{
+const itemTypeDisplay:any[]=typeArray.map((item:any)=>{
   return (
    <li key={item._id}>   <ItemType key={item._id} id={item._id} deleteClick={deleteClick} item={item}/></li>
  
@@ -158,7 +158,7 @@ const itemTypeDisplay=typeArray.map((item:any)=>{
 });
 
 
-const itemDisplay=itemArray.map((item:any)=>{
+const itemDisplay:any[]=itemArray.map((item:any)=>{
 
   if(valuetype===null){
     return (
@@ -186,7 +186,7 @@ const handleClose = () => {
 };
 
 
-console.log(itemDisplay)
+
 
 const saveClick=()=>{
   let typeIdNew:string="";
