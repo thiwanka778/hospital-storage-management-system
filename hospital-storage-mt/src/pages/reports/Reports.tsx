@@ -14,6 +14,8 @@ import TableRow from '@mui/material/TableRow';
 const columns: any[] = [
   { id: 'itemName', label: 'Name' },
   { id: 'itemTypeName', label: 'Type' },
+  { id: 'supplierInformation', label: 'Supplier Information' },
+  { id: 'description', label: 'Description' },
   {
     id: 'price',
     label: 'Price',
@@ -32,6 +34,7 @@ const columns: any[] = [
     align: 'right',
     format: (value: number) => value.toFixed(2),
   },
+ 
 ];
 
 const Reports = () => {
